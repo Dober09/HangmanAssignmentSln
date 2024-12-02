@@ -1,14 +1,49 @@
 ﻿
 
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using HangmanAssignment.Models;
 
 namespace HangmanAssignment.ViewModels
 {
-    public class GameLogic
+    public class GameLogic : BaseViewModel
     {
 
+        // players lives till game over
+        private int _lives;
 
+        // image to be displayed 
+        private string _photo;
+
+
+        //The Guess Button
+        public ICommand GuessCommand;
+
+
+        public string Photo
+        {
+            get { return _photo; }
+
+            set { _photo = value;
+                OnPropertyChanged();
+            
+                }
+        }
+
+
+
+        public int Lives
+        {
+            get => _lives;
+            set
+            {
+
+            }
+        }
+
+        /// The list of all the stages in an app  and images 
         public ObservableCollection<Tries> Tries { get; set; }
+
 
         public GameLogic() { 
             Tries = new ObservableCollection<Tries> { 
@@ -21,13 +56,34 @@ namespace HangmanAssignment.ViewModels
                 new Tries{Id=7,Image="hang7.png"},
                 new Tries{Id=8,Image="hang8.png"},
             };
+
+            GuessCommand = new Command(async () =>  GuessMethod());
         }
+
+
+        private async void GuessMethod()
+        {
+            //check what life of the page
+            if(Lives > 8)
+            {
+                //Do something
+                //change the image
+                //and increase the lives
+            }
+            else
+            {
+                //the player loss  the game 
+                //
+            }
+
+        }
+
+
+
+
+       
         
     }
 
-        public class Tries
-    {
-        public int Id { get; set; }
-        public string Image { get; set; }
-    }
+   
 }
