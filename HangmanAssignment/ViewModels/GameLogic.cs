@@ -2,6 +2,7 @@
 
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+
 using HangmanAssignment.Models;
 
 namespace HangmanAssignment.ViewModels
@@ -44,6 +45,19 @@ namespace HangmanAssignment.ViewModels
         /// The list of all the stages in an app  and images 
         public ObservableCollection<Tries> Tries { get; set; }
 
+        private string secretword;
+
+        
+        public string SecretWord
+        {
+            get => secretword;
+            set
+            {
+                secretword = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public GameLogic() { 
             Tries = new ObservableCollection<Tries> { 
@@ -56,6 +70,16 @@ namespace HangmanAssignment.ViewModels
                 new Tries{Id=7,Image="hang7.png"},
                 new Tries{Id=8,Image="hang8.png"},
             };
+            
+            //the word is currentguess
+            SecretWord = "currentguess";
+
+
+            char[] charArray = new char[SecretWord.Length];
+            for (int i = 0; i < SecretWord.Length; i++)
+            {                                                                    
+                charArray[i] = SecretWord[i];
+            }
 
             GuessCommand = new Command(async () =>  GuessMethod());
         }
@@ -72,7 +96,7 @@ namespace HangmanAssignment.ViewModels
             }
             else
             {
-                //the player loss  the game 
+                //the player loss the game 
                 //
             }
 
