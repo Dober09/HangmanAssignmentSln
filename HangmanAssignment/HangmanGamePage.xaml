@@ -12,10 +12,10 @@
                     
                 
             
-                    <Image Margin="40" Source="hang1.png" HorizontalOptions="Center"  />
+                    <Image Margin="40" Source="{Binding ImagePositon.Image}" HorizontalOptions="Center"  />
                 
         <Label FontAttributes="Bold" FontSize="30" HorizontalOptions="Center" Margin="40" Text="{Binding SecretWord}"  x:Name="word"/>
-        <Entry FontSize="30" HorizontalOptions="Center" Margin="40" Placeholder="Enter your next guess"/>
-        <Button Text="Guess" BackgroundColor="Coral"/>
+        <Entry FontSize="30" HorizontalOptions="Center" Margin="40" Text="{Binding UserGuess}" Placeholder="Enter your next guess"/>
+        <Button Text="Guess" BackgroundColor="Coral" Command="{Binding PlayCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

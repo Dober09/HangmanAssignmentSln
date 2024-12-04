@@ -1,113 +1,136 @@
 ﻿
 
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-
 using HangmanAssignment.Models;
+using System.Windows.Input;
 
 namespace HangmanAssignment.ViewModels
 {
     public class GameLogic : BaseViewModel
     {
+        //list of all pictutre
+        private List<Tries> ImagesList = new List<Tries> {
+        new Tries {Image="hang1.png"},
+        new Tries {Image="hang2.png"},
+        new Tries {Image="hang3.png"},
+        new Tries {Image="hang4.png"},
+        new Tries {Image="hang5.png"},
+        new Tries {Image="hang6.png"},
+        new Tries {Image="hang7.png"},
+        new Tries {Image="hang8.png"},
+     };
 
-        // players lives till game over
-        private int _lives;
+        //position of the loss
+        private int position;
 
-        // image to be displayed 
-        private string _photo;
-
-
-        //The Guess Button
-        public ICommand GuessCommand;
-
-
-        public string Photo
+        public int Position
         {
-            get { return _photo; }
-
-            set { _photo = value;
-                OnPropertyChanged();
-            
-                }
-        }
-
-
-
-        public int Lives
-        {
-            get => _lives;
+            get { return position; }
             set
             {
-
+                position = value;
+                OnPropertyChanged();
             }
         }
 
-        /// The list of all the stages in an app  and images 
-        public ObservableCollection<Tries> Tries { get; set; }
+        // the image displayed
+        private Tries imagePositon;
 
-        private string secretword;
+        public Tries ImagePositon
+        {
+            get { return imagePositon; }
+            set
+            {
+                imagePositon = value;
+                OnPropertyChanged();
+            }
+        }
 
-        
+
+
+        public string Word; 
+        public GameLogic()
+        {
+            Position = 0;
+            InitialWord();
+
+            ImagePositon = ImagesList[Position];
+            PlayCommand = new Command(async =>  PlayMethod());
+        }
+
+        private void InitialWord()
+        {
+            Word = "lebohang";
+            SecretWord = "";
+            foreach(char letter in  Word)
+            {
+                SecretWord +=" _ ";
+            }
+
+        }
+
+
+        //methods playmethod
+        private async void PlayMethod()
+        {
+           
+           
+                PlayLogic();
+            
+            
+           
+
+        }
+
+        private void PlayLogic()
+        {
+            
+            if (Word.ToLower().Contains(UserGuess.ToLower()))
+            {
+                for (int i = 0; i < SecretWord.Length; i++)
+                {
+                    if (Word[i].ToString() == UserGuess.ToLower())
+                    {
+                        SecretWord += $" {UserGuess.ToLower()} ";
+                    }
+                    else
+                    {
+                        SecretWord += " _ ";
+                    }
+
+                }
+            }
+        }
+
+        // the secret Word
+        private string? secretWord;
         public string SecretWord
         {
-            get => secretword;
+            get { return secretWord; }
+            set { secretWord = value; OnPropertyChanged(); }
+
+        }
+
+
+        // the user guess value
+
+        private string? userGuess;
+
+        public string? UserGuess
+        {
+            get { return userGuess; }
             set
             {
-                secretword = value;
-                OnPropertyChanged();
+                userGuess = value;
             }
         }
 
 
-        public GameLogic() { 
-            Tries = new ObservableCollection<Tries> { 
-                new Tries{Id=1,Image="hang1.png"},
-                new Tries{Id=2,Image="hang2.png"},
-                new Tries{Id=3,Image="hang3.png"},
-                new Tries{Id=4,Image="hang4.png"},
-                new Tries{Id=5,Image="hang5.png"},
-                new Tries{Id=6,Image="hang6.png"},
-                new Tries{Id=7,Image="hang7.png"},
-                new Tries{Id=8,Image="hang8.png"},
-            };
-            
-            //the word is currentguess
-            SecretWord = "currentguess";
-
-
-            char[] charArray = new char[SecretWord.Length];
-            for (int i = 0; i < SecretWord.Length; i++)
-            {                                                                    
-                charArray[i] = SecretWord[i];
-            }
-
-            GuessCommand = new Command(async () =>  GuessMethod());
-        }
-
-
-        private async void GuessMethod()
-        {
-            //check what life of the page
-            if(Lives > 8)
-            {
-                //Do something
-                //change the image
-                //and increase the lives
-            }
-            else
-            {
-                //the player loss the game 
-                //
-            }
-
-        }
+        public ICommand PlayCommand {  get; }
 
 
 
 
-       
-        
+
     }
-
    
 }
