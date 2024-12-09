@@ -86,6 +86,17 @@ namespace HangmanAssignment.ViewModels
                 userGuess = value;
                 OnPropertyChanged();
             }
+        } 
+        
+        private Question selectedQuestion;
+        public Question SelectedQuestion
+        {
+            get => selectedQuestion;
+            set
+            {
+                selectedQuestion = value;
+                OnPropertyChanged();
+            }
         }
 
         // Game commands
@@ -112,13 +123,14 @@ namespace HangmanAssignment.ViewModels
             Lost
         }
 
+        
         // Initialize game setup
         private void InitializeGame()
         {
             // Randomly select a word from predefined questions
             Random random = new Random();
-            Question selectedQuestion = Questions[random.Next(Questions.Count)];
-            Word = selectedQuestion.Answer.ToLower();
+            SelectedQuestion = Questions[random.Next(Questions.Count)];
+            Word = SelectedQuestion.Answer.ToLower();
 
             ResetSecretWord();
             Position = 0;
@@ -206,6 +218,8 @@ namespace HangmanAssignment.ViewModels
             if (SecretWord.ToLower() == Word)
             {
                 CurrentGameState = GameState.Won;
+
+                App.Current.MainPage.DisplayAlert("Won", $"{Word} is the correct ", "next");
             }
 
             // Check for lose condition
