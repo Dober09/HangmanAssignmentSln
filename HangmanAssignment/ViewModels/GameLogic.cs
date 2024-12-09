@@ -20,9 +20,11 @@ namespace HangmanAssignment.ViewModels
         // List of predefined questions for word selection
         List<Question> Questions = new List<Question>
         {
-            new Question { Quiz = "What is your name?", Answer = "Lebohang" },
-            new Question { Quiz = "Who is your facilitator?", Answer = "Mathobela" },
-            new Question { Quiz = "When do we knock off?", Answer = "Four" }
+            new Question { Quiz = "What is your name ? ", Answer = "Alan" },
+            new Question { Quiz = "Who is your facilitator ? ", Answer = "Mathobela" },
+            new Question { Quiz = "When do we knock off ? ", Answer = "Three" },
+            new Question { Quiz = "How many traineers are in the industry ", Answer = "Four"},
+            new Question { Quiz = "Who is the BodyBuilder in the lab ",Answer = "Starman" },
         };
 
         // Game state properties
@@ -143,7 +145,8 @@ namespace HangmanAssignment.ViewModels
         // Reset the secret word display
         private void ResetSecretWord()
         {
-            SecretWord = new string('_', Word.Length);
+            // Create a string with underscores separated by spaces
+            SecretWord = string.Join(" ", Enumerable.Repeat("_", Word.Length));
         }
 
         // Restart the game
@@ -187,23 +190,34 @@ namespace HangmanAssignment.ViewModels
             CheckGameStatus();
         }
 
-        // Reveal correctly guessed letters
         private void RevealLetters(char guessedLetter)
         {
-            char[] secretWordChars = SecretWord.ToCharArray();
+            // Split the current secret word by spaces
+            string[] secretWordParts = SecretWord.Split(' ');
+
+            // Create a new array to store updated parts
+            string[] updatedParts = new string[secretWordParts.Length];
 
             for (int i = 0; i < Word.Length; i++)
             {
-                if (Word[i] == guessedLetter)
+                if (char.ToLower(Word[i]) == char.ToLower(guessedLetter))
                 {
-                    secretWordChars[i] = Word[i];
+                    // Replace the underscore with the actual letter
+                    updatedParts[i] = Word[i].ToString();
+                }
+                else
+                {
+                    // Keep the existing part (underscore or previously revealed letter)
+                    updatedParts[i] = secretWordParts[i];
                 }
             }
 
-            SecretWord = new string(secretWordChars);
+            // Rejoin the parts with spaces
+            SecretWord = string.Join(" ", updatedParts);
         }
 
-        // Handle incorrect guesses
+        // Reveal correctly guessed letters
+      
         private void HandleIncorrectGuess()
         {
             incorrectGuesses++;
@@ -214,20 +228,27 @@ namespace HangmanAssignment.ViewModels
         // Check if the game is won or lost
         private void CheckGameStatus()
         {
+            // Remove spaces from SecretWord for comparison
+            string cleanedSecretWord = SecretWord.Replace(" ", "");
+            string cleanedWord = Word;
+
             // Check for win condition
-            if (SecretWord.ToLower() == Word)
+            if (cleanedSecretWord.ToLower() == cleanedWord.ToLower())
             {
                 CurrentGameState = GameState.Won;
-
-                App.Current.MainPage.DisplayAlert("Won", $"{Word} is the correct word", "next");
+                App.Current.MainPage.BackgroundColor =Colors.Green ;
+                App.Current.MainPage.DisplayAlert($"Congratulations! You {CurrentGameState} ", $"You won! The word was {Word}", "Next");
+                RestartGame();
             }
-
             // Check for lose condition
             if (incorrectGuesses >= ImagesList.Count - 1)
             {
                 CurrentGameState = GameState.Lost;
-                App.Current.MainPage.DisplayAlert("Lose", $"{Word} is the correct word ", "next");
+                
+               App.Current.MainPage.DisplayAlert($"Game Over! You {CurrentGameState}", $"The correct word was {Word}", "Try Again");
+                RestartGame();
             }
         }
+    
     }
 }
