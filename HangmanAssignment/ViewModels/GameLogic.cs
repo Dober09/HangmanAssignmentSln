@@ -219,13 +219,14 @@ namespace HangmanAssignment.ViewModels
             {
                 CurrentGameState = GameState.Won;
 
-                App.Current.MainPage.DisplayAlert("Won", $"{Word} is the correct ", "next");
+                App.Current.MainPage.DisplayAlert("Won", $"{Word} is the correct word", "next");
             }
 
             // Check for lose condition
             if (incorrectGuesses >= ImagesList.Count - 1)
             {
                 CurrentGameState = GameState.Lost;
+                App.Current.MainPage.DisplayAlert("Lose", $"{Word} is the correct word ", "next");
             }
         }
     }
